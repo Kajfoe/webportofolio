@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portofolio</title>
+<meta name="description" content="Portofolio pribadi — modern, futuristic, 3D.">
+<link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-theme="dark">
+
+  <!-- ===================== LOADER ===================== -->
+  <div id="loader">
+    <div class="loader-cube"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="loader-text" id="loader-text">Loading Experience</div>
+    <div class="loader-bar"><span></span></div>
+  </div>
+
+  <!-- ===================== CURSOR ===================== -->
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
+  <div class="mouse-glow"></div>
+
+  <!-- ===================== SCROLL PROGRESS ===================== -->
+  <div id="scroll-progress"></div>
+
+  <!-- ===================== BACKGROUND ===================== -->
+  <canvas id="particles-canvas"></canvas>
+  <div class="bg-layer">
+    <div class="aurora a1"></div>
+    <div class="aurora a2"></div>
+    <div class="aurora a3"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <header id="navbar">
+    <div class="container nav-inner">
+      <a href="#hero" class="logo" id="logo-link"><span id="logo-text">PF.</span></a>
+      <nav class="nav-links">
+        <a href="#section-about">About</a>
+        <a href="#section-skills">Skills</a>
+        <a href="#section-education">Education</a>
+        <a href="#section-experience">Projects</a>
+        <a href="#section-certificate">Certificate</a>
+        <a href="#section-gallery">Gallery</a>
+        <a href="#section-contact">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="icon-btn" id="theme-toggle" title="Ganti tema"><i data-lucide="sun-moon"></i></button>
+        <button class="icon-btn hamburger" id="hamburger" title="Menu"><i data-lucide="menu"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero" id="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow" id="hero-greeting">Halo, saya</span>
+        <h1 class="hero-title"><span id="hero-name" class="grad">Nama Anda</span></h1>
+        <div class="hero-role">&lt; <span id="hero-role-text"></span><span class="cursor-blink">&nbsp;</span> /&gt;</div>
+        <p class="hero-desc" id="hero-desc"></p>
+        <div class="hero-cta">
+          <a href="#" id="btn-cv" download class="btn btn-primary"><i data-lucide="download"></i> Download CV</a>
+          <a href="#section-contact" class="btn btn-ghost"><i data-lucide="send"></i> Contact Me</a>
+        </div>
+        <div class="hero-stats">
+          <div><strong id="stat-projects">0</strong><span>Projects</span></div>
+          <div><strong id="stat-years">0</strong><span>Years</span></div>
+          <div><strong id="stat-coffee">0</strong><span>Coffee</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="orbit-ring r1">
+          <div class="orbit-chip" style="top:-23px; left:calc(50% - 23px);"><i data-lucide="code-2"></i></div>
+          <div class="orbit-chip" style="bottom:-23px; left:calc(50% - 23px);"><i data-lucide="palette"></i></div>
+        </div>
+        <div class="orbit-ring r2">
+          <div class="orbit-chip" style="top:calc(50% - 23px); left:-23px;"><i data-lucide="database"></i></div>
+          <div class="orbit-chip" style="top:calc(50% - 23px); right:-23px;"><i data-lucide="sparkles"></i></div>
+        </div>
+        <div class="hero-photo-glow"></div>
+        <div class="hero-photo-wrap" id="hero-photo-wrap">
+          <img id="hero-photo" src="assets/images/profile.png" alt="Foto profil"
+               onerror="this.src='https://placehold.co/600x760/0a0d1c/7fa4ff?text=Foto+Profil'">
+        </div>
+      </div>
+    </div>
+    <div class="scroll-cue"><span>SCROLL</span><span class="line"></span></div>
+  </section>
+
+  <main id="main-sections">
+
+    <!-- ===================== ABOUT ===================== -->
+    <section class="section" id="section-about">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Profile</span>
+          <h2 class="section-title" id="about-heading">Tentang Saya</h2>
+        </div>
+        <div class="about-grid">
+          <div class="about-card glass tilt reveal-left">
+            <p id="about-desc"></p>
+          </div>
+          <div id="bio-grid" class="bio-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SKILLS ===================== -->
+    <section class="section" id="section-skills">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Capabilities</span>
+          <h2 class="section-title" id="skills-heading">Keahlian</h2>
+        </div>
+        <div id="skills-grid" class="skills-grid"></div>
+      </div>
+    </section>
+
+    <!-- ===================== EDUCATION ===================== -->
+    <section class="section" id="section-education">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Journey</span>
+          <h2 class="section-title" id="education-heading">Pendidikan</h2>
+        </div>
+        <div id="timeline" class="timeline"></div>
+      </div>
+    </section>
+
+    <!-- ===================== EXPERIENCE / PROJECTS ===================== -->
+    <section class="section" id="section-experience">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Work</span>
+          <h2 class="section-title" id="experience-heading">Pengalaman & Proyek</h2>
+        </div>
+        <div id="projects-grid" class="projects-grid"></div>
+      </div>
+    </section>
+
+    <!-- ===================== CERTIFICATE ===================== -->
+    <section class="section" id="section-certificate">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Credentials</span>
+          <h2 class="section-title" id="certificate-heading">Sertifikat</h2>
+        </div>
+        <div class="cert-slider-wrap">
+          <button class="cert-nav prev icon-btn" id="cert-prev"><i data-lucide="chevron-left"></i></button>
+          <div id="cert-slider" class="cert-slider"></div>
+          <button class="cert-nav next icon-btn" id="cert-next"><i data-lucide="chevron-right"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== GALLERY ===================== -->
+    <section class="section" id="section-gallery">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Moments</span>
+          <h2 class="section-title" id="gallery-heading">Galeri</h2>
+        </div>
+        <div id="gallery-grid" class="gallery-masonry"></div>
+      </div>
+    </section>
+
+    <!-- ===================== CONTACT ===================== -->
+    <section class="section" id="section-contact">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Get in touch</span>
+          <h2 class="section-title" id="contact-heading">Hubungi Saya</h2>
+          <p class="section-sub" id="contact-desc"></p>
+        </div>
+        <div class="contact-grid">
+          <form id="contact-form" class="contact-form glass reveal-left">
+            <div class="field">
+              <input type="text" placeholder=" " required>
+              <label>Nama</label>
+            </div>
+            <div class="field">
+              <input type="email" placeholder=" " required>
+              <label>Email</label>
+            </div>
+            <div class="field">
+              <textarea placeholder=" " required></textarea>
+              <label>Pesan</label>
+            </div>
+            <button type="submit" class="btn btn-primary"><i data-lucide="send"></i> Kirim Pesan</button>
+          </form>
+          <div class="contact-side reveal-right">
+            <div class="contact-info-card glass tilt">
+              <div class="ic"><i data-lucide="mail"></i></div>
+              <div><h4>Email</h4><p id="contact-email"></p></div>
+            </div>
+            <div class="contact-info-card glass tilt">
+              <div class="ic"><i data-lucide="message-circle"></i></div>
+              <div><h4>WhatsApp</h4><p><a id="contact-whatsapp-link" href="#" target="_blank" rel="noopener">Chat langsung</a></p></div>
+            </div>
+            <div class="map-embed glass">
+              <iframe id="map-iframe" src="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <div class="social-row">
+              <a id="social-github" href="#" target="_blank" rel="noopener" title="GitHub"><i data-lucide="github"></i></a>
+              <a id="social-linkedin" href="#" target="_blank" rel="noopener" title="LinkedIn"><i data-lucide="linkedin"></i></a>
+              <a id="social-instagram" href="#" target="_blank" rel="noopener" title="Instagram"><i data-lucide="instagram"></i></a>
+              <a id="social-whatsapp" href="#" target="_blank" rel="noopener" title="WhatsApp"><i data-lucide="message-circle"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="logo"><span id="footer-logo">PF.</span></div>
+        <nav class="footer-links">
+          <a href="#section-about">About</a>
+          <a href="#section-experience">Projects</a>
+          <a href="#section-contact">Contact</a>
+          <a href="admin.html">Admin</a>
+        </nav>
+        <div class="social-row">
+          <a id="footer-social-1" href="#" target="_blank" rel="noopener"><i data-lucide="github"></i></a>
+          <a id="footer-social-2" href="#" target="_blank" rel="noopener"><i data-lucide="linkedin"></i></a>
+          <a id="footer-social-3" href="#" target="_blank" rel="noopener"><i data-lucide="instagram"></i></a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p id="footer-text"></p>
+        <p>&copy; <span id="year"></span> — Visitor #<span id="stat-visitors">0</span> · <span class="clock" id="digital-clock"></span></p>
+      </div>
+    </div>
+  </footer>
+
+  <button id="back-to-top" title="Kembali ke atas"><i data-lucide="arrow-up"></i></button>
+
+  <!-- ===================== LIGHTBOX ===================== -->
+  <div id="lightbox">
+    <button class="icon-btn close-lb"><i data-lucide="x"></i></button>
+    <img id="lightbox-img" src="" alt="Preview">
+  </div>
+
+  <!-- ===================== EASTER EGG ===================== -->
+  <div id="easter-egg">
+    <div class="egg-card glass">
+      <h3>🎉 Kamu menemukan easter egg!</h3>
+      <p>Terima kasih sudah menjelajahi setiap sudut website ini secara detail.</p>
+      <button class="btn btn-primary egg-close">Tutup</button>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="js/default-data.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

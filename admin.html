@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — Portofolio</title>
+<link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body data-theme="dark" class="admin-body">
+
+  <canvas id="particles-canvas"></canvas>
+  <div class="bg-layer">
+    <div class="aurora a1"></div>
+    <div class="aurora a2"></div>
+  </div>
+
+  <!-- ===================== LOGIN ===================== -->
+  <div id="login-screen">
+    <form id="login-form" class="glass login-card">
+      <div class="login-logo"><i data-lucide="hexagon"></i></div>
+      <h2>Admin Panel</h2>
+      <p class="login-sub">Masuk untuk mengelola seluruh konten website.</p>
+      <div class="field">
+        <input type="text" id="login-user" placeholder=" " autocomplete="username" required>
+        <label>Username</label>
+      </div>
+      <div class="field">
+        <input type="password" id="login-pass" placeholder=" " autocomplete="current-password" required>
+        <label>Password</label>
+      </div>
+      <p id="login-error" class="login-error"></p>
+      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">
+        <i data-lucide="log-in"></i> Masuk
+      </button>
+      <a href="index.html" class="back-site"><i data-lucide="arrow-left"></i> Kembali ke website</a>
+      <p class="login-hint">Default: <code>admin</code> / <code>admin123</code></p>
+    </form>
+  </div>
+
+  <!-- ===================== DASHBOARD ===================== -->
+  <div id="dashboard" class="hidden">
+    <aside class="admin-sidebar glass">
+      <div class="admin-logo"><i data-lucide="hexagon"></i> <span>Admin</span></div>
+      <nav class="admin-nav">
+        <button data-tab="overview" class="admin-tab active"><i data-lucide="layout-dashboard"></i> Ringkasan</button>
+        <button data-tab="site" class="admin-tab"><i data-lucide="settings"></i> Situs & Tema</button>
+        <button data-tab="hero" class="admin-tab"><i data-lucide="user-circle"></i> Hero</button>
+        <button data-tab="about" class="admin-tab"><i data-lucide="id-card"></i> Tentang Saya</button>
+        <button data-tab="skills" class="admin-tab"><i data-lucide="gauge"></i> Skills</button>
+        <button data-tab="education" class="admin-tab"><i data-lucide="graduation-cap"></i> Pendidikan</button>
+        <button data-tab="experience" class="admin-tab"><i data-lucide="briefcase"></i> Proyek</button>
+        <button data-tab="certificate" class="admin-tab"><i data-lucide="award"></i> Sertifikat</button>
+        <button data-tab="gallery" class="admin-tab"><i data-lucide="images"></i> Galeri</button>
+        <button data-tab="contact" class="admin-tab"><i data-lucide="phone"></i> Kontak</button>
+        <button data-tab="footer" class="admin-tab"><i data-lucide="align-end-horizontal"></i> Footer & Stats</button>
+        <button data-tab="account" class="admin-tab"><i data-lucide="lock"></i> Akun Admin</button>
+      </nav>
+      <a href="index.html" target="_blank" class="btn btn-ghost view-site"><i data-lucide="external-link"></i> Lihat Situs</a>
+      <button id="logout-btn" class="btn btn-ghost logout-btn"><i data-lucide="log-out"></i> Keluar</button>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-topbar glass">
+        <h1 id="tab-title">Ringkasan</h1>
+        <div class="topbar-actions">
+          <button id="export-btn" class="icon-btn" title="Export JSON"><i data-lucide="download"></i></button>
+          <label class="icon-btn" title="Import JSON">
+            <i data-lucide="upload"></i>
+            <input type="file" id="import-input" accept="application/json" hidden>
+          </label>
+          <button id="reset-btn" class="icon-btn" title="Reset ke default"><i data-lucide="rotate-ccw"></i></button>
+          <button id="save-btn" class="btn btn-primary"><i data-lucide="save"></i> Simpan Perubahan</button>
+        </div>
+      </header>
+
+      <div id="save-toast" class="save-toast"><i data-lucide="check-circle"></i> Perubahan tersimpan &amp; langsung tampil di website</div>
+
+      <section id="panel-overview" class="admin-panel"></section>
+      <section id="panel-site" class="admin-panel hidden"></section>
+      <section id="panel-hero" class="admin-panel hidden"></section>
+      <section id="panel-about" class="admin-panel hidden"></section>
+      <section id="panel-skills" class="admin-panel hidden"></section>
+      <section id="panel-education" class="admin-panel hidden"></section>
+      <section id="panel-experience" class="admin-panel hidden"></section>
+      <section id="panel-certificate" class="admin-panel hidden"></section>
+      <section id="panel-gallery" class="admin-panel hidden"></section>
+      <section id="panel-contact" class="admin-panel hidden"></section>
+      <section id="panel-footer" class="admin-panel hidden"></section>
+      <section id="panel-account" class="admin-panel hidden"></section>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="js/default-data.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
