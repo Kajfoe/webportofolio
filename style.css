@@ -3,7 +3,7 @@
    Design language: "Holographic Console"
    Deep-space glass panels, aurora light, electric blue + neon
    purple accents, mono data labels, geometric display type.
-   ========================================================= */
+   ========================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
@@ -267,16 +267,79 @@ h1,h2,h3,h4{ font-family:var(--font-display); font-weight:600; letter-spacing:-.
 .tilt{ transform-style:preserve-3d; transition:transform .25s var(--ease), box-shadow .35s; will-change:transform; }
 
 /* ============================================================
-   ABOUT
+   ABOUT (Perbaikan Layout)
    ============================================================ */
-.about-grid{ display:grid; grid-template-columns:.9fr 1.1fr; gap:44px; align-items:start; }
-.about-desc{ color:var(--dim); font-size:1.05rem; margin-bottom:10px; }
-.bio-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px; }
-.bio-item{ padding:16px 18px; }
-.bio-item .k{ font-family:var(--font-mono); font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--blue-bright); }
-.bio-item .v{ margin-top:6px; font-weight:500; }
-.about-card{ padding:34px; }
-.about-card p{ color:var(--dim); }
+.about-grid{ 
+  display:grid; 
+  grid-template-columns:1fr; 
+  gap:24px; 
+  max-width:100%;
+}
+
+.about-card{ 
+  padding:36px 32px;
+  position:relative;
+  overflow:hidden;
+}
+
+.about-card::before{
+  content:'';
+  position:absolute;
+  top:0; left:0;
+  width:100%; height:3px;
+  background:linear-gradient(90deg, var(--blue), var(--purple));
+  opacity:.8;
+}
+
+.about-card p{ 
+  color:var(--dim); 
+  font-size:1.08rem; 
+  line-height:1.8;
+  position:relative;
+  z-index:1;
+}
+
+.bio-grid{ 
+  display:grid; 
+  grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); 
+  gap:16px; 
+}
+
+.bio-item{ 
+  padding:20px 18px; 
+  transition:transform .3s var(--ease), box-shadow .3s var(--ease);
+  position:relative;
+  overflow:hidden;
+}
+
+.bio-item::before{
+  content:'';
+  position:absolute;
+  top:0; left:0;
+  width:2px; height:100%;
+  background:linear-gradient(180deg, var(--blue), var(--purple));
+  opacity:.5;
+}
+
+.bio-item:hover{
+  transform:translateY(-4px);
+  box-shadow:0 8px 25px rgba(0,0,0,.3);
+}
+
+.bio-item .k{ 
+  font-family:var(--font-mono); 
+  font-size:.65rem; 
+  letter-spacing:.1em; 
+  text-transform:uppercase; 
+  color:var(--blue-bright);
+  margin-bottom:4px;
+}
+
+.bio-item .v{ 
+  font-weight:600; 
+  font-size:.95rem;
+  color:var(--white);
+}
 
 /* ============================================================
    SKILLS
@@ -330,23 +393,64 @@ h1,h2,h3,h4{ font-family:var(--font-display); font-weight:600; letter-spacing:-.
 .project-links svg{ width:14px; height:14px; }
 
 /* ============================================================
-   CERTIFICATES slider
+   CERTIFICATES (Perbaikan Layout)
    ============================================================ */
-.cert-slider-wrap{ position:relative; padding:0 60px; }
-.cert-slider{ display:flex; gap:24px; overflow-x:auto; scroll-snap-type:x mandatory; padding:20px 4px 30px; scrollbar-width:none; }
+.cert-slider-wrap{ 
+  position:relative; 
+  padding:0 60px;
+  max-width:100%;
+}
+
+.cert-slider{ 
+  display:flex; 
+  gap:24px; 
+  overflow-x:auto; 
+  scroll-snap-type:x mandatory; 
+  padding:20px 4px 30px; 
+  scrollbar-width:none;
+  justify-content:flex-start;
+}
+
+/* Modifikasi untuk 3 atau kurang certificate */
+.cert-slider.centered{
+  justify-content:center;
+  flex-wrap:wrap;
+  overflow-x:visible;
+}
+
+.cert-slider.centered .cert-card{
+  scroll-snap-align:none;
+}
+
 .cert-slider::-webkit-scrollbar{ display:none; }
-.cert-card{ min-width:290px; scroll-snap-align:center; cursor:pointer; overflow:hidden; }
+
+.cert-card{ 
+  min-width:290px; 
+  scroll-snap-align:center; 
+  cursor:pointer; 
+  overflow:hidden;
+  flex-shrink:0;
+}
+
+.cert-slider.centered .cert-card{
+  flex-shrink:1;
+  min-width:250px;
+  max-width:340px;
+}
+
 .cert-card img{ height:190px; width:100%; object-fit:cover; }
 .cert-info{ padding:16px 18px; }
 .cert-info h4{ font-size:1rem; }
 .cert-info span{ font-size:.8rem; color:var(--dim-2); }
 .cert-nav{ position:absolute; top:50%; translate:0 -50%; width:44px; height:44px; border-radius:50%; z-index:5; }
-.cert-nav.prev{ left:0; } .cert-nav.next{ right:0; }
+.cert-nav.prev{ left:0; } 
+.cert-nav.next{ right:0; }
+.cert-nav.hidden{ display:none; }
 
 /* ============================================================
    GALLERY masonry + lightbox
    ============================================================ */
-.gallery-masonry{ columns:4 220px; column-gap:16px; }
+.gallery-masonry{ columns:3 220px; column-gap:16px; }
 [data-theme] .gallery-masonry{}
 .gallery-item{ break-inside:avoid; margin-bottom:16px; position:relative; overflow:hidden; border-radius:var(--radius-md); cursor:pointer; }
 .gallery-item img{ width:100%; display:block; transition:transform .5s var(--ease); }
@@ -387,7 +491,8 @@ h1,h2,h3,h4{ font-family:var(--font-display); font-weight:600; letter-spacing:-.
 .contact-info-card{ padding:24px; display:flex; align-items:center; gap:14px; }
 .contact-info-card .ic{ width:44px; height:44px; border-radius:12px; background:var(--glass-strong); display:flex; align-items:center; justify-content:center; color:var(--blue-bright); flex-shrink:0; }
 .contact-info-card .ic svg{ width:20px; height:20px; }
-.contact-info-card h4{ font-size:.92rem; } .contact-info-card p{ color:var(--dim); font-size:.86rem; }
+.contact-info-card h4{ font-size:.92rem; } 
+.contact-info-card p{ color:var(--dim); font-size:.86rem; }
 .map-embed{ border-radius:var(--radius-md); overflow:hidden; height:220px; border:1px solid var(--glass-border); }
 .map-embed iframe{ width:100%; height:100%; border:0; filter:grayscale(.3) invert(.92) contrast(.9); }
 [data-theme="light"] .map-embed iframe{ filter:none; }
@@ -443,8 +548,8 @@ footer{ position:relative; z-index:2; padding:50px 0 30px; border-top:1px solid 
   .hero-photo-wrap{ width:280px; }
   .about-grid{ grid-template-columns:1fr; }
   .contact-grid{ grid-template-columns:1fr; }
-  .gallery-masonry{ columns:3 180px; }
 }
+
 @media (max-width:760px){
   .nav-links{
     position:fixed; top:0; right:0; height:100vh; width:min(78vw,320px); flex-direction:column; justify-content:center; align-items:stretch;
@@ -456,14 +561,22 @@ footer{ position:relative; z-index:2; padding:50px 0 30px; border-top:1px solid 
   .hamburger{ display:flex; width:40px; height:40px; align-items:center; justify-content:center; border-radius:50%; background:var(--glass); border:1px solid var(--glass-border); }
   .hamburger svg{ width:19px; height:19px; }
   .bio-grid{ grid-template-columns:1fr; }
-  .gallery-masonry{ columns:2 140px; }
   .cert-slider-wrap{ padding:0 10px; }
   .cert-nav{ display:none; }
+  .cert-slider.centered{
+    justify-content:center;
+    flex-wrap:wrap;
+  }
 }
+
 @media (max-width:480px){
-  .section{ padding:90px 0; }
+  .section{ padding:90px 0; } 
   .hero{ padding-top:130px; }
   .hero-photo-wrap{ width:220px; }
   .orbit-ring{ display:none; }
-  .gallery-masonry{ columns:2 130px; }
+  .bio-grid{ grid-template-columns:1fr; }
+  .cert-slider.centered .cert-card{
+    min-width:100%;
+    max-width:100%;
+  }
 }
