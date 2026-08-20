@@ -3,7 +3,7 @@
    All content is stored under the same localStorage key that
    index.html reads (portfolio_data_v1), so every save here is
    reflected on the live site immediately — no HTML editing.
-   ========================================================= */
+   ========================================================== */
 
 const STORAGE_KEY = 'portfolio_data_v1';
 const SESSION_KEY = 'portfolio_admin_session';
@@ -19,8 +19,34 @@ let adminData = null;      // working copy being edited
 let currentTab = 'overview';
 
 /* ---------------------------------------------------------
+   IMAGE UPLOAD HELPER
+   ---------------------------------------------------------- */
+function handleImageUpload(file, callback){
+  if (!file) return;
+  
+  // Validasi file
+  const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+  if (!validTypes.includes(file.type)){
+    alert('Format file tidak valid. Gunakan: JPG, PNG, WebP, GIF, atau SVG');
+    return;
+  }
+  
+  // Validasi ukuran (max 5MB)
+  if (file.size > 5 * 1024 * 1024){
+    alert('Ukuran file terlalu besar. Maksimal 5MB');
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    callback(e.target.result);
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ---------------------------------------------------------
    LOGIN
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function initLogin(){
   const form = document.getElementById('login-form');
   form.addEventListener('submit', e => {
@@ -52,7 +78,7 @@ document.getElementById('logout-btn')?.addEventListener('click', () => {
 
 /* ---------------------------------------------------------
    TABS
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 const TAB_TITLES = {
   overview:'Ringkasan', site:'Situs & Tema', hero:'Hero Section', about:'Tentang Saya',
   skills:'Skills', education:'Pendidikan', experience:'Pengalaman & Proyek',
@@ -81,7 +107,7 @@ function renderTab(tab){
 
 /* ---------------------------------------------------------
    SMALL HELPERS
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function field(label, value, oninputAttr, type='text'){
   return `<div class="form-field">
     <label>${label}</label>
@@ -99,7 +125,7 @@ function escapeHtml(str){ return String(str ?? '').replace(/</g,'&lt;'); }
 
 /* ---------------------------------------------------------
    OVERVIEW
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function renderOverview(panel){
   const d = adminData;
   panel.innerHTML = `
@@ -119,7 +145,7 @@ function renderOverview(panel){
 
 /* ---------------------------------------------------------
    SITE & THEME
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function renderSite(panel){
   const d = adminData;
   panel.innerHTML = `
@@ -180,7 +206,7 @@ function moveSection(i, dir){
 
 /* ---------------------------------------------------------
    HERO
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function renderHero(panel){
   const h = adminData.hero;
   panel.innerHTML = `
@@ -196,15 +222,36 @@ function renderHero(panel){
         ${textareaField('Deskripsi Singkat', h.description, "adminData.hero.description=this.value")}
         <div class="form-field">
           <label>Daftar Profesi (satu per baris, untuk efek mengetik)</label>
-          <textarea oninput="adminData.hero.roles=this.value.split('\\n').map(s=>s.trim()).filter(Boolean)">${escapeHtml(h.roles.join('\n'))}</textarea>
+          <textarea oninput="adminData.hero.roles=this.value.split('\n').map(s=>s.trim()).filter(Boolean)">${escapeHtml(h.roles.join('\n'))}</textarea>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3><i data-lucide="image"></i> Upload Foto Profil</h3>
+      <div class="upload-area" id="hero-photo-upload">
+        <input type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml" onchange="uploadHeroPhoto(this.files[0])">
+        <i data-lucide="upload-cloud" style="width:32px;height:32px;color:var(--blue-bright);margin-bottom:8px;"></i>
+        <p style="font-size:.9rem;color:var(--dim);">Klik untuk upload atau drag & drop</p>
+        <div class="upload-preview" id="hero-photo-preview">
+          ${h.photo ? `<div class="upload-preview-item"><img src="${h.photo}" alt="Preview"></div>` : ''}
         </div>
       </div>
     </div>`;
 }
 
+function uploadHeroPhoto(file){
+  handleImageUpload(file, (dataUrl) => {
+    adminData.hero.photo = dataUrl;
+    document.getElementById('hero-photo-preview').innerHTML = `
+      <div class="upload-preview-item">
+        <img src="${dataUrl}" alt="Preview">
+      </div>`;
+  });
+}
+
 /* ---------------------------------------------------------
    ABOUT
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 let bioEntries = [];
 function renderAbout(panel){
   const a = adminData.about;
@@ -242,7 +289,7 @@ function removeBio(i){ bioEntries.splice(i,1); syncBio(); renderBioEditor(); }
 
 /* ---------------------------------------------------------
    SKILLS
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function renderSkills(panel){
   panel.innerHTML = `
     <div class="card">
@@ -279,7 +326,7 @@ function removeSkill(i){ adminData.skills.categories.splice(i,1); renderSkillsEd
 
 /* ---------------------------------------------------------
    EDUCATION
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function renderEducation(panel){
   panel.innerHTML = `
     <div class="card">
@@ -313,7 +360,7 @@ function removeEdu(i){ adminData.education.items.splice(i,1); renderEduEditor();
 
 /* ---------------------------------------------------------
    EXPERIENCE / PROJECTS
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function renderExperience(panel){
   panel.innerHTML = `
     <div class="card">
@@ -341,16 +388,34 @@ function renderExpEditor(){
         <div class="form-field"><label>Link Demo</label><input value="${escapeAttr(p.demo)}" oninput="adminData.experience.items[${i}].demo=this.value"></div>
         <div class="form-field"><label>Link GitHub</label><input value="${escapeAttr(p.github)}" oninput="adminData.experience.items[${i}].github=this.value"></div>
       </div>
-      <div style="margin-top:10px;"><div class="form-field"><label>Deskripsi</label><textarea oninput="adminData.experience.items[${i}].description=this.value">${escapeHtml(p.description)}</textarea></div></div>
+      <div style="margin-top:10px;">
+        <div class="form-field"><label>Deskripsi</label><textarea oninput="adminData.experience.items[${i}].description=this.value">${escapeHtml(p.description)}</textarea></div>
+      </div>
+      <div style="margin-top:14px;">
+        <div class="upload-area" id="exp-thumb-upload-${i}">
+          <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" onchange="uploadExpThumb(${i}, this.files[0])">
+          <i data-lucide="image" style="width:24px;height:24px;color:var(--blue-bright);margin-bottom:4px;"></i>
+          <p style="font-size:.85rem;color:var(--dim);">Upload Thumbnail</p>
+          <div class="upload-preview">
+            ${p.thumbnail ? `<div class="upload-preview-item"><img src="${p.thumbnail}" alt="Thumbnail"></div>` : ''}
+          </div>
+        </div>
+      </div>
     </div>`).join('');
   if (window.lucide) lucide.createIcons();
 }
-function addExp(){ adminData.experience.items.push({title:'Proyek Baru', thumbnail:'projects/new.jpg', description:'', tech:[], status:'Dalam Pengembangan', demo:'#', github:'#'}); renderExpEditor(); }
+function uploadExpThumb(i, file){
+  handleImageUpload(file, (dataUrl) => {
+    adminData.experience.items[i].thumbnail = dataUrl;
+    renderExpEditor();
+  });
+}
+function addExp(){ adminData.experience.items.push({title:'Proyek Baru', thumbnail:'', description:'', tech:[], status:'Dalam Pengembangan', demo:'#', github:'#'}); renderExpEditor(); }
 function removeExp(i){ adminData.experience.items.splice(i,1); renderExpEditor(); }
 
 /* ---------------------------------------------------------
    CERTIFICATES
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function renderCertificate(panel){
   panel.innerHTML = `
     <div class="card">
@@ -375,15 +440,31 @@ function renderCertEditor(){
         <div class="form-field"><label>Penyelenggara</label><input value="${escapeAttr(c.issuer)}" oninput="adminData.certificate.items[${i}].issuer=this.value"></div>
         <div class="form-field" style="grid-column:1/-1;"><label>Path Gambar</label><input value="${escapeAttr(c.image)}" oninput="adminData.certificate.items[${i}].image=this.value"></div>
       </div>
+      <div style="margin-top:14px;">
+        <div class="upload-area" id="cert-image-upload-${i}">
+          <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" onchange="uploadCertImage(${i}, this.files[0])">
+          <i data-lucide="image" style="width:24px;height:24px;color:var(--blue-bright);margin-bottom:4px;"></i>
+          <p style="font-size:.85rem;color:var(--dim);">Upload Gambar Sertifikat</p>
+          <div class="upload-preview">
+            ${c.image ? `<div class="upload-preview-item"><img src="${c.image}" alt="Certificate"></div>` : ''}
+          </div>
+        </div>
+      </div>
     </div>`).join('');
   if (window.lucide) lucide.createIcons();
 }
-function addCert(){ adminData.certificate.items.push({title:'Sertifikat Baru', issuer:'Penyelenggara', image:'certificates/new.jpg'}); renderCertEditor(); }
+function uploadCertImage(i, file){
+  handleImageUpload(file, (dataUrl) => {
+    adminData.certificate.items[i].image = dataUrl;
+    renderCertEditor();
+  });
+}
+function addCert(){ adminData.certificate.items.push({title:'Sertifikat Baru', issuer:'Penyelenggara', image:''}); renderCertEditor(); }
 function removeCert(i){ adminData.certificate.items.splice(i,1); renderCertEditor(); }
 
 /* ---------------------------------------------------------
    GALLERY
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function renderGallery(panel){
   panel.innerHTML = `
     <div class="card">
@@ -407,15 +488,31 @@ function renderGalEditor(){
         <div class="form-field"><label>Path Gambar</label><input value="${escapeAttr(g.image)}" oninput="adminData.gallery.items[${i}].image=this.value"></div>
         <div class="form-field"><label>Keterangan</label><input value="${escapeAttr(g.caption)}" oninput="adminData.gallery.items[${i}].caption=this.value"></div>
       </div>
+      <div style="margin-top:14px;">
+        <div class="upload-area" id="gal-image-upload-${i}">
+          <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" onchange="uploadGalImage(${i}, this.files[0])">
+          <i data-lucide="image" style="width:24px;height:24px;color:var(--blue-bright);margin-bottom:4px;"></i>
+          <p style="font-size:.85rem;color:var(--dim);">Upload Foto</p>
+          <div class="upload-preview">
+            ${g.image ? `<div class="upload-preview-item"><img src="${g.image}" alt="Gallery"></div>` : ''}
+          </div>
+        </div>
+      </div>
     </div>`).join('');
   if (window.lucide) lucide.createIcons();
 }
-function addGal(){ adminData.gallery.items.push({image:'gallery/new.jpg', caption:'Momen Baru'}); renderGalEditor(); }
+function uploadGalImage(i, file){
+  handleImageUpload(file, (dataUrl) => {
+    adminData.gallery.items[i].image = dataUrl;
+    renderGalEditor();
+  });
+}
+function addGal(){ adminData.gallery.items.push({image:'', caption:'Momen Baru'}); renderGalEditor(); }
 function removeGal(i){ adminData.gallery.items.splice(i,1); renderGalEditor(); }
 
 /* ---------------------------------------------------------
    CONTACT
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function renderContact(panel){
   const c = adminData.contact;
   panel.innerHTML = `
@@ -441,7 +538,7 @@ function renderContact(panel){
 
 /* ---------------------------------------------------------
    FOOTER & STATS
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function renderFooter(panel){
   const f = adminData.footer, s = adminData.stats;
   panel.innerHTML = `
@@ -462,7 +559,7 @@ function renderFooter(panel){
 
 /* ---------------------------------------------------------
    ACCOUNT
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function renderAccount(panel){
   const a = adminData.admin;
   panel.innerHTML = `
@@ -485,7 +582,7 @@ const RENDERERS = {
 
 /* ---------------------------------------------------------
    SAVE / RESET / EXPORT / IMPORT
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 document.getElementById('save-btn')?.addEventListener('click', () => {
   persist(adminData);
   const toast = document.getElementById('save-toast');
@@ -526,7 +623,7 @@ document.getElementById('import-input')?.addEventListener('change', e => {
 
 /* ---------------------------------------------------------
    PARTICLES (shared light background, same as main.js)
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function initParticles(){
   const canvas = document.getElementById('particles-canvas');
   if (!canvas) return;
@@ -551,7 +648,7 @@ function initParticles(){
 
 /* ---------------------------------------------------------
    INIT
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
   initLogin();
   initParticles();
