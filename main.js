@@ -3,13 +3,13 @@
    Vanilla JS, no build step. Loads data from localStorage
    (set by admin.html) with data/data.json as the source of
    truth on first run, then renders every section dynamically.
-   ========================================================= */
+   ========================================================== */
 
 const STORAGE_KEY = 'portfolio_data_v1';
 
 /* ---------------------------------------------------------
    1. DATA LOADING
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 async function loadData(){
   // 1. Prefer data saved by the admin panel
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -34,13 +34,13 @@ let DATA = null;
 
 /* ---------------------------------------------------------
    2. ICONS (lucide) helper
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function icon(name, cls=''){ return `<i data-lucide="${name}" class="${cls}"></i>`; }
 function refreshIcons(){ if (window.lucide) lucide.createIcons(); }
 
 /* ---------------------------------------------------------
    3. RENDER FUNCTIONS
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function renderAll(){
   document.title = DATA.site.title;
   document.getElementById('logo-text').textContent = DATA.site.logoText;
@@ -161,6 +161,8 @@ function renderExperience(){
 function renderCertificates(){
   document.getElementById('certificate-heading').textContent = DATA.certificate.heading;
   const wrap = document.getElementById('cert-slider');
+  const count = DATA.certificate.items.length;
+  
   wrap.innerHTML = DATA.certificate.items.map((c,idx) => `
     <div class="cert-card glass tilt" data-idx="${idx}">
       <img src="${c.image}" alt="${c.title}" onerror="this.src='https://placehold.co/500x340/0a0d1c/cd8bff?text=${encodeURIComponent(c.title)}'">
@@ -169,6 +171,25 @@ function renderCertificates(){
         <span>${c.issuer}</span>
       </div>
     </div>`).join('');
+  
+  // Perbaikan: Jika 3 atau kurang, center
+  if (count <= 3){
+    wrap.classList.add('centered');
+  } else {
+    wrap.classList.remove('centered');
+  }
+  
+  // Toggle navigation buttons
+  const prevBtn = document.getElementById('cert-prev');
+  const nextBtn = document.getElementById('cert-next');
+  if (count <= 3){
+    prevBtn.classList.add('hidden');
+    nextBtn.classList.add('hidden');
+  } else {
+    prevBtn.classList.remove('hidden');
+    nextBtn.classList.remove('hidden');
+  }
+  
   wrap.querySelectorAll('.cert-card').forEach(card => {
     card.addEventListener('click', () => openLightbox(card.querySelector('img').src));
   });
@@ -230,14 +251,14 @@ function applySectionOrderAndVisibility(){
 
 /* ---------------------------------------------------------
    4. LOADER
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 window.addEventListener('load', () => {
   setTimeout(() => document.getElementById('loader').classList.add('hidden'), 900);
 });
 
 /* ---------------------------------------------------------
    5. CUSTOM CURSOR
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function initCursor(){
   const dot = document.querySelector('.cursor-dot');
   const ring = document.querySelector('.cursor-ring');
@@ -257,7 +278,7 @@ function initCursor(){
 
 /* ---------------------------------------------------------
    6. SCROLL PROGRESS + NAVBAR + BACK TO TOP
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function initScrollFx(){
   const bar = document.getElementById('scroll-progress');
   const nav = document.getElementById('navbar');
@@ -285,7 +306,7 @@ function highlightActiveNav(){
 
 /* ---------------------------------------------------------
    7. MOBILE MENU
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function initMobileMenu(){
   const btn = document.getElementById('hamburger');
   const nav = document.querySelector('.nav-links');
@@ -295,7 +316,7 @@ function initMobileMenu(){
 
 /* ---------------------------------------------------------
    8. TYPING ROLE TEXT
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function initTyping(){
   const el = document.getElementById('hero-role-text');
   const roles = window.HERO_ROLES || ['Developer'];
@@ -313,7 +334,7 @@ function initTyping(){
 
 /* ---------------------------------------------------------
    9. SCROLL REVEAL (IntersectionObserver)
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function initReveal(){
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
@@ -331,7 +352,7 @@ function refreshReveal(){ initReveal(); }
 
 /* ---------------------------------------------------------
    10. 3D TILT ON HOVER
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function initTilt(){
   document.addEventListener('mousemove', e => {
     const el = e.target.closest('.tilt');
@@ -349,7 +370,7 @@ function initTilt(){
 
 /* ---------------------------------------------------------
    11. HERO PHOTO PARALLAX
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function initHeroParallax(){
   const wrap = document.getElementById('hero-photo-wrap');
   document.querySelector('.hero').addEventListener('mousemove', e => {
@@ -361,7 +382,7 @@ function initHeroParallax(){
 
 /* ---------------------------------------------------------
    12. RIPPLE BUTTON EFFECT
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function initRipple(){
   document.querySelectorAll('.btn').forEach(btn => {
     btn.addEventListener('click', function(e){
@@ -378,7 +399,7 @@ function initRipple(){
 
 /* ---------------------------------------------------------
    13. THEME TOGGLE
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function initThemeToggle(){
   document.getElementById('theme-toggle').addEventListener('click', () => {
     const current = document.body.getAttribute('data-theme');
@@ -390,7 +411,7 @@ function initThemeToggle(){
 
 /* ---------------------------------------------------------
    14. LIGHTBOX
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function openLightbox(src){
   const lb = document.getElementById('lightbox');
   document.getElementById('lightbox-img').src = src;
@@ -404,7 +425,7 @@ function initLightbox(){
 
 /* ---------------------------------------------------------
    15. CERTIFICATE SLIDER NAV
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function initCertNav(){
   const slider = document.getElementById('cert-slider');
   document.getElementById('cert-prev').addEventListener('click', () => slider.scrollBy({left:-310, behavior:'smooth'}));
@@ -413,7 +434,7 @@ function initCertNav(){
 
 /* ---------------------------------------------------------
    16. CONTACT FORM (front-end only demo)
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function initContactForm(){
   const form = document.getElementById('contact-form');
   form.addEventListener('submit', e => {
@@ -428,7 +449,7 @@ function initContactForm(){
 
 /* ---------------------------------------------------------
    17. DIGITAL CLOCK
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function initClock(){
   const el = document.getElementById('digital-clock');
   function tick(){
@@ -440,7 +461,7 @@ function initClock(){
 
 /* ---------------------------------------------------------
    18. ANIMATED COUNTER
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function animateCount(el, target){
   if (!el) return;
   let cur = 0; const step = Math.max(1, target/60);
@@ -453,7 +474,7 @@ function animateCount(el, target){
 
 /* ---------------------------------------------------------
    19. PARTICLE BACKGROUND (canvas)
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function initParticles(){
   const canvas = document.getElementById('particles-canvas');
   const ctx = canvas.getContext('2d');
@@ -481,7 +502,7 @@ function initParticles(){
 
 /* ---------------------------------------------------------
    20. EASTER EGG (Konami code + logo triple-click)
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 function initEasterEgg(){
   const modal = document.getElementById('easter-egg');
   const closeIt = () => modal.classList.remove('open');
@@ -506,7 +527,7 @@ function initEasterEgg(){
 
 /* ---------------------------------------------------------
    INIT
-   --------------------------------------------------------- */
+   ---------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', async () => {
   DATA = await loadData();
   renderAll();
